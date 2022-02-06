@@ -190,25 +190,25 @@ function Photo({
     const angle = 0.25;
     
     // Draw coupon
+    ctx.translate(baseX, baseY)
     ctx.rotate(angle);
     ctx.beginPath();
-    ctx.moveTo(baseX, baseY);
-    ctx.lineTo(baseX + 25, baseY - 25);
-    ctx.lineTo(baseX + 135, baseY - 25);
-    ctx.lineTo(baseX + 135, baseY + 40);
-    ctx.lineTo(baseX + 25, baseY  + 40);
-    ctx.lineTo(baseX , baseY + 15);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(25, -25);
+    ctx.lineTo(135, -25);
+    ctx.lineTo(135, 40);
+    ctx.lineTo(25, 40);
+    ctx.lineTo(0, 15);
     ctx.closePath();
     // Hole
-    ctx.arc(baseX + 15, baseY + 7, 10, 0, Math.PI * 2, false) 
+    ctx.arc(15, 7, 10, 0, Math.PI * 2, false) 
     ctx.fillStyle = "red";
     ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
     ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
     // Text
     ctx.font = "20px Verdana";
     ctx.fillStyle = "white";
-    ctx.fillText(couponText, baseX + 35, baseY + 14);
-    ctx.rotate(-angle);
+    ctx.fillText(couponText, 35, 14);
   }
 
   function clearZone(x, y, width, height) {
