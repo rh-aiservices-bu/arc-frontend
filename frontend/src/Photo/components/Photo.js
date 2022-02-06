@@ -184,31 +184,56 @@ function Photo({
 
   function drawCoupon(value, x, y, width, height) {
     const ctx = imageCanvas.getContext("2d");
-    const baseX = x + 0.75 * width;
-    const baseY = y + 0.3 * height;
     const couponText = String(value * 100) + "% OFF";
     const angle = 0.25;
-    
-    // Draw coupon
-    ctx.translate(baseX, baseY)
-    ctx.rotate(angle);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(25, -25);
-    ctx.lineTo(135, -25);
-    ctx.lineTo(135, 40);
-    ctx.lineTo(25, 40);
-    ctx.lineTo(0, 15);
-    ctx.closePath();
-    // Hole
-    ctx.arc(15, 7, 10, 0, Math.PI * 2, false) 
-    ctx.fillStyle = "red";
-    ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
-    ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
-    // Text
-    ctx.font = "20px Verdana";
-    ctx.fillStyle = "white";
-    ctx.fillText(couponText, 35, 14);
+
+    if ( (x + 0.75 * width + 135) < imageCanvas.width) {  // Draw on the right side
+      const baseX = x + 0.75 * width;
+      const baseY = y + 0.3 * height;
+      // Draw coupon
+      ctx.translate(baseX, baseY)
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(25, -25);
+      ctx.lineTo(135, -25);
+      ctx.lineTo(135, 40);
+      ctx.lineTo(25, 40);
+      ctx.lineTo(0, 15);
+      ctx.closePath();
+      // Hole
+      ctx.arc(15, 7, 10, 0, Math.PI * 2, false) 
+      ctx.fillStyle = "red";
+      ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
+      ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
+      // Text
+      ctx.font = "20px Verdana";
+      ctx.fillStyle = "white";
+      ctx.fillText(couponText, 35, 14);
+    } else { // Draw on the left side
+      const baseX = x + 0.25 * width;
+      const baseY = y + 0.3 * height;
+      // Draw coupon
+      ctx.translate(baseX, baseY)
+      ctx.rotate(-angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-25, -25);
+      ctx.lineTo(-135, -25);
+      ctx.lineTo(-135, 40);
+      ctx.lineTo(-25, 40);
+      ctx.lineTo(0, 15);
+      ctx.closePath();
+      // Hole
+      ctx.arc(-15, 7, 10, 0, Math.PI * 2, false) 
+      ctx.fillStyle = "red";
+      ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
+      ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
+      // Text
+      ctx.font = "20px Verdana";
+      ctx.fillStyle = "white";
+      ctx.fillText(couponText, -125, 14);
+    }
   }
 
   function clearZone(x, y, width, height) {
