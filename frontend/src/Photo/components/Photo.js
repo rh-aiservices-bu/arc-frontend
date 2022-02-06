@@ -91,7 +91,7 @@ function Photo({
     const base64data = imageData.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
     searchPhoto(base64data);
 
-    updateZonesCanvas();
+    //updateZonesCanvas();
   }
 
   function updateImageCanvas() {
@@ -135,24 +135,29 @@ function Photo({
   }
 
   function drawDetection({ box, label, score }) {
-    const drawScore = true;
-    const textBgHeight = 14;
-    const padding = 2;
-    const letterWidth = 7.25;
-    const scoreWidth = drawScore ? 4 * letterWidth : 0;
-    const text = drawScore ? `${label} ${Math.floor(score * 100)}%` : label;
+    if (label === "Bottle") {
+      const drawScore = true;
+      const textBgHeight = 14;
+      const padding = 2;
+      const letterWidth = 7.25;
+      const scoreWidth = drawScore ? 4 * letterWidth : 0;
+      const text = drawScore ? `${label} ${Math.floor(score * 100)}%` : label;
 
-    const width = Math.floor((box.xMax - box.xMin) * imageCanvas.width);
-    const height = Math.floor((box.yMax - box.yMin) * imageCanvas.height);
-    const x = Math.floor(box.xMin * imageCanvas.width);
-    const y = Math.floor(box.yMin * imageCanvas.height);
-    const labelSetting = labelSettings[label];
-    const labelWidth = label.length * letterWidth + scoreWidth + padding * 2;
-    drawBox(x, y, width, height, labelSetting.bgColor);
-    drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
-    drawBoxText(text, x + padding, y + height - padding);
-    clearZone(x + 5, y + height - textBgHeight - 4, labelWidth, textBgHeight);
-    clearZone(x, y, width, height);
+      const width = Math.floor((box.xMax - box.xMin) * imageCanvas.width);
+      const height = Math.floor((box.yMax - box.yMin) * imageCanvas.height);
+      const x = Math.floor(box.xMin * imageCanvas.width);
+      const y = Math.floor(box.yMin * imageCanvas.height);
+      const labelSetting = labelSettings[label];
+      const labelWidth = label.length * letterWidth + scoreWidth + padding * 2;
+
+      
+      drawBox(x, y, width, height, labelSetting.bgColor);
+      drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
+      drawBoxText(text, x + padding, y + height - padding);
+      drawCoupon(0.15, x, y, width, height);
+      clearZone(x + 5, y + height - textBgHeight - 4, labelWidth, textBgHeight);
+      clearZone(x, y, width, height);
+    }
   }
 
   function drawBox(x, y, width, height, color) {
@@ -175,6 +180,35 @@ function Photo({
     ctx.font = "12px Mono";
     ctx.fillStyle = "white";
     ctx.fillText(text, x, y);
+  }
+
+  function drawCoupon(value, x, y, width, height) {
+    const ctx = imageCanvas.getContext("2d");
+    const baseX = x + 0.75 * width;
+    const baseY = y + 0.3 * height;
+    const couponText = String(value * 100) + "% OFF";
+    const angle = 0.25;
+    
+    // Draw coupon
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(baseX, baseY);
+    ctx.lineTo(baseX + 25, baseY - 25);
+    ctx.lineTo(baseX + 135, baseY - 25);
+    ctx.lineTo(baseX + 135, baseY + 40);
+    ctx.lineTo(baseX + 25, baseY  + 40);
+    ctx.lineTo(baseX , baseY + 15);
+    ctx.closePath();
+    // Hole
+    ctx.arc(baseX + 15, baseY + 7, 10, 0, Math.PI * 2, false) 
+    ctx.fillStyle = "red";
+    ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
+    ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
+    // Text
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "white";
+    ctx.fillText(couponText, baseX + 35, baseY + 14);
+    ctx.rotate(-angle);
   }
 
   function clearZone(x, y, width, height) {
