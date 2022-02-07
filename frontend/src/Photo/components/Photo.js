@@ -134,7 +134,7 @@ function Photo({
     prediction.detections.filter((d) => d.score > minScore).forEach((d) => drawDetection(d));
   }
 
-  function drawDetection({ box, label, score }) {
+  function drawDetection({ box, label, score, cValue }) {
     const drawScore = true;
     const textBgHeight = 14;
     const padding = 2;
@@ -153,7 +153,7 @@ function Photo({
     drawBox(x, y, width, height, labelSetting.bgColor);
     //drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
     //drawBoxText(text, x + padding, y + height - padding);
-    drawCoupon(0.15, x, y, width, height);
+    drawCoupon(cValue, x, y, width, height);
     clearZone(x + 5, y + height - textBgHeight - 4, labelWidth, textBgHeight);
     clearZone(x, y, width, height);
   }
@@ -181,9 +181,9 @@ function Photo({
     ctx.fillText(text, x, y);
   }
 
-  function drawCoupon(value, x, y, width, height) {
+  function drawCoupon(message, x, y, width, height) {
     const ctx = imageCanvas.getContext("2d");
-    const couponText = String(value * 100) + "% OFF";
+    const couponText = String(message);
     const angle = 0.25;
 
     if ( (x + 0.5 * width + 135) < imageCanvas.width) {  // Draw on the right side
