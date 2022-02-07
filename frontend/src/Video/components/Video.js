@@ -87,7 +87,7 @@ function Video({
     imageObj.onload = function () {
       const ctx = imageCanvas.getContext("2d");
       ctx.drawImage(this, 0, 0, imageCanvas.width, imageCanvas.height);
-      updateZonesCanvas();
+      //updateZonesCanvas();
       drawDetections();
     };
 
@@ -115,7 +115,7 @@ function Video({
     ctx.fillRect(0, 0, zonesCanvas.width, zonesCanvas.height);
   }
 
-  function drawDetection({ box, label, score }) {
+  function drawDetection({ box, label, score, cValue }) {
     const drawScore = true;
     const textBgHeight = 14;
     const padding = 2;
@@ -130,8 +130,9 @@ function Video({
     const labelSetting = labelSettings[label];
     const labelWidth = label.length * letterWidth + scoreWidth + padding * 2;
     drawBox(x, y, width, height, labelSetting.bgColor);
-    drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
-    drawBoxText(text, x + padding, y + height - padding);
+    //drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
+    //drawBoxText(text, x + padding, y + height - padding);
+    drawCoupon(cValue, x, y, width, height);
     clearZone(x + 5, y + height - textBgHeight - 4, labelWidth, textBgHeight);
     clearZone(x, y, width, height);
   }
@@ -156,6 +157,64 @@ function Video({
     ctx.font = "12px Mono";
     ctx.fillStyle = "white";
     ctx.fillText(text, x, y);
+  }
+
+  function drawCoupon(message, x, y, width, height) {
+    const ctx = imageCanvas.getContext("2d");
+    const couponText = String(message);
+    const angle = 0.25;
+
+    if ( (x + 0.5 * width + 135) < imageCanvas.width) {  // Draw on the right side
+      const baseX = x + 0.5 * width;
+      const baseY = y + 0.3 * height;
+      // Draw coupon
+      ctx.translate(baseX, baseY)
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(25, -25);
+      ctx.lineTo(135, -25);
+      ctx.lineTo(135, 40);
+      ctx.lineTo(25, 40);
+      ctx.lineTo(0, 15);
+      ctx.closePath();
+      // Hole
+      ctx.arc(15, 7, 7, 0, Math.PI * 2, false) 
+      ctx.fillStyle = "red";
+      ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
+      ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
+      // Text
+      ctx.font = "20px Verdana";
+      ctx.fillStyle = "white";
+      ctx.fillText(couponText, 35, 14);
+      // Reset context
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    } else { // Draw on the left side
+      const baseX = x + 0.25 * width;
+      const baseY = y + 0.3 * height;
+      // Draw coupon
+      ctx.translate(baseX, baseY)
+      ctx.rotate(-angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-25, -25);
+      ctx.lineTo(-135, -25);
+      ctx.lineTo(-135, 40);
+      ctx.lineTo(-25, 40);
+      ctx.lineTo(0, 15);
+      ctx.closePath();
+      // Hole
+      ctx.arc(-15, 7, 7, 0, Math.PI * 2, false) 
+      ctx.fillStyle = "red";
+      ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
+      ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
+      // Text
+      ctx.font = "20px Verdana";
+      ctx.fillStyle = "white";
+      ctx.fillText(couponText, -125, 14);
+      // Reset context
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
   }
 
   function clearZone(x, y, width, height) {
