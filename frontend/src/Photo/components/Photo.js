@@ -201,7 +201,7 @@ function Photo({
       ctx.lineTo(0, 15);
       ctx.closePath();
       // Hole
-      ctx.arc(15, 7, 10, 0, Math.PI * 2, false) 
+      ctx.arc(15, 7, 7, 0, Math.PI * 2, false) 
       ctx.fillStyle = "red";
       ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
       ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
@@ -224,7 +224,7 @@ function Photo({
       ctx.lineTo(0, 15);
       ctx.closePath();
       // Hole
-      ctx.arc(-15, 7, 10, 0, Math.PI * 2, false) 
+      ctx.arc(-15, 7, 7, 0, Math.PI * 2, false) 
       ctx.fillStyle = "red";
       ctx.mozFillRule = 'evenodd'; //for old firefox 1~30
       ctx.fill('evenodd'); //for firefox 31+, IE 11+, chrome
@@ -323,7 +323,9 @@ function Photo({
     const displayImage =
       !predictionPending && !predictionError && prediction ? {} : { display: "none" };
 
+    
     let displayNoObjects;
+    /*
     if (
       !predictionPending &&
       prediction &&
@@ -333,6 +335,8 @@ function Photo({
     } else {
       displayNoObjects = { display: "none" };
     }
+    */
+    displayNoObjects = { display: "none" }; // Never show no objects
 
     return (
       <div className="result" style={displayResult}>
