@@ -135,34 +135,33 @@ function Photo({
   }
 
   function drawDetection({ box, label, score }) {
-    if (label === "Bottle") {
-      const drawScore = true;
-      const textBgHeight = 14;
-      const padding = 2;
-      const letterWidth = 7.25;
-      const scoreWidth = drawScore ? 4 * letterWidth : 0;
-      const text = drawScore ? `${label} ${Math.floor(score * 100)}%` : label;
+    const drawScore = true;
+    const textBgHeight = 14;
+    const padding = 2;
+    const letterWidth = 7.25;
+    const scoreWidth = drawScore ? 4 * letterWidth : 0;
+    const text = drawScore ? `${label} ${Math.floor(score * 100)}%` : label;
 
-      const width = Math.floor((box.xMax - box.xMin) * imageCanvas.width);
-      const height = Math.floor((box.yMax - box.yMin) * imageCanvas.height);
-      const x = Math.floor(box.xMin * imageCanvas.width);
-      const y = Math.floor(box.yMin * imageCanvas.height);
-      const labelSetting = labelSettings[label];
-      const labelWidth = label.length * letterWidth + scoreWidth + padding * 2;
+    const width = Math.floor((box.xMax - box.xMin) * imageCanvas.width);
+    const height = Math.floor((box.yMax - box.yMin) * imageCanvas.height);
+    const x = Math.floor(box.xMin * imageCanvas.width);
+    const y = Math.floor(box.yMin * imageCanvas.height);
+    const labelSetting = labelSettings[label];
+    const labelWidth = label.length * letterWidth + scoreWidth + padding * 2;
 
-      
-      drawBox(x, y, width, height, labelSetting.bgColor);
-      drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
-      drawBoxText(text, x + padding, y + height - padding);
-      drawCoupon(0.15, x, y, width, height);
-      clearZone(x + 5, y + height - textBgHeight - 4, labelWidth, textBgHeight);
-      clearZone(x, y, width, height);
-    }
+    
+    drawBox(x, y, width, height, labelSetting.bgColor);
+    //drawBoxTextBG(x, y + height - textBgHeight, labelWidth, textBgHeight, labelSetting.bgColor);
+    //drawBoxText(text, x + padding, y + height - padding);
+    drawCoupon(0.15, x, y, width, height);
+    clearZone(x + 5, y + height - textBgHeight - 4, labelWidth, textBgHeight);
+    clearZone(x, y, width, height);
   }
 
   function drawBox(x, y, width, height, color) {
     const ctx = imageCanvas.getContext("2d");
     ctx.lineWidth = 2;
+    ctx.setLineDash([5, 15]);
     ctx.strokeStyle = color;
     ctx.strokeRect(x, y, width, height);
   }
@@ -187,8 +186,8 @@ function Photo({
     const couponText = String(value * 100) + "% OFF";
     const angle = 0.25;
 
-    if ( (x + 0.75 * width + 135) < imageCanvas.width) {  // Draw on the right side
-      const baseX = x + 0.75 * width;
+    if ( (x + 0.5 * width + 135) < imageCanvas.width) {  // Draw on the right side
+      const baseX = x + 0.5 * width;
       const baseY = y + 0.3 * height;
       // Draw coupon
       ctx.translate(baseX, baseY)
